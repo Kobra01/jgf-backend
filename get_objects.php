@@ -16,53 +16,38 @@ $database = new Database();
 $db = $database->getConnection();
 
 // instantiate other objects
-$student = new Student($db);
-$classObject = new ClassObject($db);
+$locObject = new Object($db);
 
-//check if it is a student
-if ($jwt_decoded->data->type == 'STNT') {
+// get posted data
+$data = json_decode(file_get_contents("php://input"));
 
-    // check if data is set
-    if (!isset($jwt_decoded->data->id)) {
+// check if data is set
+if (!isset($data->user_lat) or !isset($data->user_long)) {
 
-        // message if value missed
-        http_response_code(400);
-        echo json_encode(array("error" => TRUE, "message" => "Some values are missing in the token."));
+    // message if value missed
+    http_response_code(400);
+    echo json_encode(array("error" => TRUE, "message" => "user position is missing."));
 
-        die();
-    }
-
-    // set product property values
-    $student->user_id = $jwt_decoded->data->id;
-    // get the user data
-    if(!$student->getStudentData()){
-
-        // message if unable to create user
-        http_response_code(400);
-        echo json_encode(array("error" => TRUE, "message" => "Unable to get student data."));
-        die();
-    }
-
-    // set product property values
-    $classObject->year = $student->year;
-    if (!$classObject->getClasses()) {
-        // message if unable to get classes
-        http_response_code(400);
-        echo json_encode(array("error" => TRUE, "message" => "Unable to find classes."));
-        die();
-    }
-
-    // set response code & answer
-    http_response_code(200);
-    echo json_encode(array(
-        "error" => FALSE,
-        "message" => "Found classes.",
-        "classes" => $classObject->classes));
     die();
 }
 
- // message that this is not a valid type
-http_response_code(403);
-echo json_encode(array("error" => TRUE, "message" => "This action is not allowed."));
+$locObject->user_lat = $data->user_lat;
+$locObject->user_long = $data->user_long;
+
+if(!$locObject->getNearObjects()){
+
+    // message if unable to create user
+    http_response_code(400);
+    echo json_encode(array("error" => TRUE, "message" => "Unable to get objects."));
+    die();
+}
+
+// set response code & answer
+http_response_code(200);
+echo json_encode(array(
+    "error" => FALSE,
+    "message" => "Found objects.",
+    "objects" => $locObject->objects));
+die();
 
 ?>
