@@ -47,7 +47,6 @@ http_response_code(200);
 echo json_encode(array(
     "error" => FALSE,
     "message" => "Found objects.",
-    "objects" => $locObject->objects));
-die();
+    "objects" => $locObject->multi_objects));
 
 ?>

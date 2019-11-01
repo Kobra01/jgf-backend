@@ -34,7 +34,7 @@ class Object{
     public $town_postalcode;
     public $town_id;
 
-    public $objects;
+    public $multi_objects;
     public $infos;   
 
     // constructor
@@ -47,14 +47,14 @@ class Object{
     // get objects in a specific area
     public function getNearObjects(){
 
-        $latitudeInMeter = $distance_const;
+        $latitudeInMeter = $this->distance_const;
         $meterInLatitude = 1 / $latitudeInMeter;
 
-        $longitudeInMeter = $latitudeInMeter * cos(deg2rad($user_lat));
+        $longitudeInMeter = $latitudeInMeter * cos(deg2rad($this->user_lat));
         $meterInLongitude = 1 / $longitudeInMeter;
 
-        $distanceInLatitude = $distance * $meterInLatitude;
-        $distanceInLongitude = $distance * $meterInLongitude;
+        $distanceInLatitude = $this->distance * $meterInLatitude;
+        $distanceInLongitude = $this->distance * $meterInLongitude;
 
         // Create Query
         $query = '  SELECT
@@ -73,10 +73,10 @@ class Object{
         $this->student=htmlspecialchars(strip_tags($this->student));
 
         // bind the values
-        $stmt->bindParam(':min_lat', $this->user_lat);
-        $stmt->bindParam(':max_lat', $this->user_lat);
-        $stmt->bindParam(':min_long', $this->user_long);
-        $stmt->bindParam(':max_long', $this->user_long);
+        $stmt->bindParam(':min_lat', $this->user_lat - $distanceInLatitude);
+        $stmt->bindParam(':max_lat', $this->user_lat + $distanceInLatitude);
+        $stmt->bindParam(':min_long', $this->user_long - $distanceInLongitude);
+        $stmt->bindParam(':max_long', $this->user_long + $distanceInLongitude);
 
         // exit if execute failed
         if(!$stmt->execute()){
@@ -84,33 +84,7 @@ class Object{
         }
 
         // get record details / values
-        $this->objects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return true;
-    }
-
-    // CRUD -> Delete
-
-    // delete lesson
-    public function delete(){
-
-        // Create Query
-        $query = '  DELETE FROM
-                        ' . $this->table_lessons . '
-                    WHERE
-                        id = :id';
-
-        // prepare the query
-        $stmt = $this->conn->prepare($query);
-
-        $this->id = htmlspecialchars(strip_tags($this->id));
-
-        $stmt->bindParam(':id', $this->id);
-
-        // exit if failed
-        if(!$stmt->execute()){
-            return false;
-        }
+        $this->multi_objects = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return true;
     }
