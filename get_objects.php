@@ -1,5 +1,16 @@
 <?php
 
+function utf8ize( $mixed ) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = utf8ize($value);
+        }
+    } elseif (is_string($mixed)) {
+        return mb_convert_encoding($mixed, "UTF-8", "UTF-8");
+    }
+    return $mixed;
+}
+
 // required headers
 //header("Access-Control-Allow-Origin: https://www.mks-software.de/sms/");
 header("Content-Type: application/json; charset=UTF-8");
@@ -47,6 +58,9 @@ http_response_code(200);
 echo json_encode(array(
     "error" => FALSE,
     "message" => "Found objects.",
-    "objects" => $locObject->multi_objects));
+    "objects" => utf8ize($locObject->multi_objects)));
+
+// Debug
+// echo json_last_error_msg();
 
 ?>

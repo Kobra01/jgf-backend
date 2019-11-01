@@ -73,10 +73,10 @@ class Object{
         $this->student=htmlspecialchars(strip_tags($this->student));
 
         // bind the values
-        $stmt->bindParam(':min_lat', $this->user_lat - $distanceInLatitude);
-        $stmt->bindParam(':max_lat', $this->user_lat + $distanceInLatitude);
-        $stmt->bindParam(':min_long', $this->user_long - $distanceInLongitude);
-        $stmt->bindParam(':max_long', $this->user_long + $distanceInLongitude);
+        $stmt->bindParam(':min_lat', round($this->user_lat - $distanceInLatitude, 6));
+        $stmt->bindParam(':max_lat', round($this->user_lat + $distanceInLatitude, 6));
+        $stmt->bindParam(':min_long', round($this->user_long - $distanceInLongitude, 6));
+        $stmt->bindParam(':max_long', round($this->user_long + $distanceInLongitude, 6));
 
         // exit if execute failed
         if(!$stmt->execute()){
