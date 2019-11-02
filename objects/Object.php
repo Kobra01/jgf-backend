@@ -91,7 +91,7 @@ class Object{
 
         // Create Query
         $query = '  SELECT
-                        i.id, i.type, i.checked, i.text, i.source, i.further_info, i.oid, i.aid, a.firstname, a.lastname
+                        i.id, i.type, i.checked, i.text, i.source, i.further_info, a.firstname, a.lastname
                     FROM
                         ' . $this->table_info.' i, ' . $this->table_author.' a
                     WHERE
