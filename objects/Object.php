@@ -69,9 +69,6 @@ class Object{
         // prepare the query
         $stmt = $this->conn->prepare($query);
 
-        // sanitize
-        $this->student=htmlspecialchars(strip_tags($this->student));
-
         // bind the values
         $stmt->bindParam(':min_lat', round($this->user_lat - $distanceInLatitude, 6));
         $stmt->bindParam(':max_lat', round($this->user_lat + $distanceInLatitude, 6));
@@ -85,6 +82,39 @@ class Object{
 
         // get record details / values
         $this->multi_objects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return true;
+    }
+
+    // get information of object
+    public function getObjectInfos(){
+
+        // Create Query
+        $query = '  SELECT
+                        i.id, i.type, i.checked, i.text, i.source, i.further_info, i.oid, i.aid, a.firstname, a.lastname
+                    FROM
+                        ' . $this->table_info.' i, ' . $this->table_author.' a
+                    WHERE
+                        i.oid = :object_id
+                    AND
+                        i.aid = a.id';
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->id=htmlspecialchars(strip_tags($this->id));
+
+        // bind the values
+        $stmt->bindParam(':object_id', $this->id);
+
+        // exit if execute failed
+        if(!$stmt->execute()){
+            return false;
+        }
+
+        // get record details / values
+        $this->infos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         return true;
     }
