@@ -12,7 +12,7 @@ function utf8ize( $mixed ) {
 }
 
 // required headers
-//header("Access-Control-Allow-Origin: https://www.mks-software.de/sms/");
+header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json; charset=UTF-8");
 header("Access-Control-Allow-Methods: POST");
 header("Access-Control-Max-Age: 3600");
@@ -46,8 +46,7 @@ $locObject->user_lat = $data->user_lat;
 $locObject->user_long = $data->user_long;
 
 if(!$locObject->getNearObjects()){
-
-    // message if unable to create user
+    
     http_response_code(400);
     echo json_encode(array("error" => TRUE, "message" => "Unable to get objects."));
     die();
