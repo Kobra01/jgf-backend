@@ -44,6 +44,13 @@ if (!isset($data->object_id)) {
 
 $locObject->id = $data->object_id;
 
+if(!$locObject->getObjectDetails()){
+    
+    http_response_code(400);
+    echo json_encode(array("error" => TRUE, "message" => "Unable to get object details."));
+    die();
+}
+
 if(!$locObject->getObjectInfos()){
     
     http_response_code(400);
@@ -56,6 +63,7 @@ http_response_code(200);
 echo json_encode(array(
     "error" => FALSE,
     "message" => "Found information.",
+    "details" => utf8ize($locObject->entireObject),
     "information" => utf8ize($locObject->infos)));
 
 // Debug

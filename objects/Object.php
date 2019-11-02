@@ -18,6 +18,7 @@ class Object{
     public $user_long;
 
     // object properties
+    public $entireObject;
     public $id;
     public $name;
     public $short_text;
@@ -82,6 +83,37 @@ class Object{
 
         // get record details / values
         $this->multi_objects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return true;
+    }
+
+    // get details of object
+    public function getObjectDetails(){
+
+        // Create Query
+        $query = '  SELECT
+                        *
+                    FROM
+                        ' . $this->table . '
+                    WHERE
+                        id = :object_id';
+
+        // prepare the query
+        $stmt = $this->conn->prepare($query);
+
+        // sanitize
+        $this->id=htmlspecialchars(strip_tags($this->id));
+
+        // bind the values
+        $stmt->bindParam(':object_id', $this->id);
+
+        // exit if execute failed
+        if(!$stmt->execute()){
+            return false;
+        }
+
+        // get record details / values
+        $this->entireObject = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return true;
     }
