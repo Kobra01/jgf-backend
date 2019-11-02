@@ -97,7 +97,9 @@ class Object{
                     WHERE
                         i.oid = :object_id
                     AND
-                        i.aid = a.id';
+                        i.aid = a.id
+                    ORDER BY
+                        i.created DESC';
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
