@@ -11,7 +11,7 @@ class Object{
     private $table = "object";
     private $table_info = "information";
     private $table_author = "author";
-    private $table_plz = "plz";
+    private $table_town = "town";
 
     //user properties
     public $user_lat;
@@ -61,7 +61,7 @@ class Object{
         $query = '  SELECT
                         o.id, o.name, o.short_text, o.img_url, o.size, o.latitude, o.longitude, t.name as town
                     FROM
-                        ' . $this->table.' o, ' . $this->table_plz.' t
+                        ' . $this->table.' o, ' . $this->table_town.' t
                     WHERE
                         latitude BETWEEN :min_lat AND :max_lat
                     AND
