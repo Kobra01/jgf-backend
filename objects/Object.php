@@ -59,13 +59,15 @@ class Object{
 
         // Create Query
         $query = '  SELECT
-                        id, name, short_text, img_url, size, latitude, longitude
+                        o.id, o.name, o.short_text, o.img_url, o.size, o.latitude, o.longitude, t.name as town
                     FROM
-                        ' . $this->table. '
+                        ' . $this->table.' o, ' . $this->table_plz.' t
                     WHERE
                         latitude BETWEEN :min_lat AND :max_lat
                     AND
-                        longitude BETWEEN :min_long AND :max_long';
+                        longitude BETWEEN :min_long AND :max_long
+                    AND
+                        o.pid = t.id';
 
         // prepare the query
         $stmt = $this->conn->prepare($query);
